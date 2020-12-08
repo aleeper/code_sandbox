@@ -1,8 +1,15 @@
+ALL_CC=$(basename $(wildcard *.cc))
+
+all: $(addprefix run_,$(ALL_CC))
 
 run_%:
-	mkdir -p out/
+	@echo Rule: $@
+	@mkdir -p out/
 	g++ -std=c++11 $*.cc -o out/$*.o
-	./out/$*.o
+	@echo "./out/$*.o"
+	@echo "================="
+	@./out/$*.o
+
 
 
 clean:
