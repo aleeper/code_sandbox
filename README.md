@@ -1,4 +1,4 @@
-# A Random Collection of Python Stuff
+# A Random Collection of Code Snippets and Minor Projects
 
 
 
