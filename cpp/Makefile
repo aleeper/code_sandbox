@@ -1,8 +1,8 @@
 
-simple:
+run_%:
 	mkdir -p out/
-	g++ -std=c++11 leeper_helpers.cc -o out/leeper_helpers.o
-	./out/leeper_helpers.o
+	g++ -std=c++11 $*.cc -o out/$*.o
+	./out/$*.o
 
 
 clean:
