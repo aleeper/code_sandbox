@@ -37,7 +37,7 @@ void removeIfArray() {
 
 void removeIfVector() {
   cout << "Running removeIfVector example:" << endl;
-  vector<int> myints = {1,2,3,4,5,6,7,8,9,10};            // 1 2 3 4 5 6 7 8 9
+  std::vector<int> myints = {1,2,3,4,5,6,7,8,9,10};            // 1 2 3 4 5 6 7 8 9
 
   auto remove_fn = [&](int i) { 
     cout << "vector is now: " << myints << endl;

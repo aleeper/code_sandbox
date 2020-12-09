@@ -13,7 +13,7 @@ struct Point {
   double y;
 };
 
-std::ostream& operator<<(std::ostream& stream, Point& p) {
+std::ostream& operator<<(std::ostream& stream, const Point& p) {
   stream << "[" << p.x << ", " << p.y << "]";
   return stream;
 }
