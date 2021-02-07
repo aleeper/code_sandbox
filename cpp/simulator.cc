@@ -1,0 +1,83 @@
+CarA
+pos = (-5, 0)
+heading = pi/2
+speed = 1m/s
+yaw_rate = -pi/50
+carSize = 1
+
+CarB
+pos = (5, 0)
+heading = pi/2
+speed = 1m/s
+yaw_rate = -pi/50
+carSize = 1
+
+collision at t ~11s
+
+
+struct Point {
+  double x;
+  double y;
+};
+
+struct Car {
+  Point position;
+  double heading_radians;
+  double speed; // meters / second
+  double yaw_rate;  // [radians/second]
+  double radius; // [meters]
+};
+
+void updateCar(Car& car) {
+  
+  
+  
+}
+
+bool checkCollision(const Car& car1, const Car& car2) {
+  double diffX = car1.position.x - car2.position.x;
+  double diffY = car1.position.y - car2.position.y;
+  double distance_sq = diffX * diffX + diffY * diffY;
+  double radius_sum = car1.radius + car2.radius;
+  return distance_sq <= radius_sum * radius_sum;
+}
+  
+bool checkForCollisions(const vector<Car>& objects) {
+  for (int i = 0; i < objects.size() - 1; ++i) {
+    for (int j = i + 1; j < objects.size(); ++j) {
+      if (checkCollision(objects)) {
+        return true;
+      }
+    }  
+  }
+  return false;
+}
+
+class Simulator {
+ public:
+  Simultor(double timestep) : timestep_(timestep) {}
+  
+  void addObject(std::unique_ptr<Car> car) {
+    
+  }
+  
+  // void setConditions(int id, Config config);
+  
+  void step() {
+    // update the position of all objects
+    // check for collisions
+    // report! 
+    
+    for (Car& car : objects_) {
+      updateCar(car);
+    }
+    bool hasCollision = checkForCollisions(objects_);
+  }
+  
+  
+
+ private:
+  double timestep_;
+  vector<Car> objects_;
+
+}
