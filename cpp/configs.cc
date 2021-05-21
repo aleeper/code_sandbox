@@ -1,34 +1,30 @@
-#include "leeper_helpers.h"
-#include "scoped_timer.h"
+// #include "leeper_helpers.h"
+// #include "scoped_timer.h"
+// #include <chrono>
 
-#include <chrono>
+#include <iomanip>
 #include <iostream>
 #include <vector>
-
 
 using std::cout;
 using std::endl;
 using std::vector;
 
-void getCombinations(const vector<vector<int>>& values, int row_index,
+// ********************************
+// Recursive Solution
+// ********************************
+void getCombinationsRecursive(const vector<vector<int>>& values, int row_index,
     vector<int>& combo, vector<vector<int>>& all_combinations) {
 
   const vector<int>& current_row = values[row_index];
   for (int value : current_row) {
     combo.push_back(value);
     if (row_index < values.size() - 1) {
-      getCombinations(values, row_index + 1, combo, all_combinations);
+      getCombinationsRecursive(values, row_index + 1, combo, all_combinations);
     } else {
       all_combinations.push_back(combo);
     }
     combo.pop_back();
-    // auto new_combo = combo;
-    // new_combo.push_back(value);
-    // if (row_index < values.size() - 1) {
-    //   getCombinations(values, row_index + 1, new_combo, all_combinations);
-    // } else {
-    //   all_combinations.push_back(new_combo);
-    // }
   }
 }
 
@@ -37,14 +33,17 @@ vector<vector<int>> getCombinationsByRecursion(const vector<vector<int>>& values
   if (!values.empty()) {
     vector<int> combo;
     combo.reserve(values.size());
-    getCombinations(values, 0, combo, combinations);
+    getCombinationsRecursive(values, 0, combo, combinations);
   }
   return combinations;
 }
 
+// ********************************
+// Nth-combination Solution
+// ********************************
 vector<int> makeCombination(const vector<vector<int>>& values, int index) {
   vector<int> combo;
-  combo.reserve(values.size());  
+  combo.reserve(values.size());
   int divisor = 1;
   for (int row_index = 0; row_index < values.size(); row_index++) {
     const vector<int>& current_row = values[row_index];
@@ -69,29 +68,74 @@ vector<vector<int>> getCombinationsByIndex(const vector<vector<int>>& values) {
   return combinations;
 }
 
+
+// Helper for printing.
+template <class T>
+std::ostream& operator<<(std::ostream& stream, const std::vector<std::vector<T>>& board) {
+  size_t rows = board.size();
+  stream << "[";
+  for (size_t i = 0; i < rows; i++) {
+    size_t columns = board[i].size();
+    if (i > 0) {
+      stream << " ";
+    }
+    stream << "[";
+    for (size_t j = 0; j < columns; j++) {
+        stream << std::setw(0) << board[i][j] << std::setw(0);
+        if (j < columns - 1) {
+          stream << ", ";
+        }
+    }
+    stream << "]";
+    if (i < rows - 1) {
+      stream << "\n";
+    }
+  }
+  stream << "]";
+  return stream;
+}
+
 int main() {
   vector<vector<int>> values = {
-    {1, 2, 3, 4, 5},
     {1, 2, 3},
-    {1, 2, 3, 4, 5, 6, 7},
-    {1, 2, 3, 4, 5, 6}
+    {4, 5},
+    {6, 7, 8, 9},
   };
 
   cout << "values:\n" << values << endl;
-  auto start = std::chrono::high_resolution_clock::now();
-  constexpr int kNumIterations = 1000;
-  vector<vector<int>> combinations;
-  double time = 0;
-  {
-    ScopedTimer timer(&time);
-    for (int i = 0; i < kNumIterations; i++) {
-      combinations = getCombinationsByIndex(values);
-      // combinations = getCombinationsByRecursion(values);
-    }
-  }
+  vector<vector<int>> combinations = getCombinationsByIndex(values);
+  // combinations = getCombinationsByRecursion(values);
 
-  cout << "Calculated " << combinations.size() << " combinations in an average of "
-       << static_cast<int>(time * 1e6 / kNumIterations) << " microseconds." << endl;
+  cout << "Combinations:\n" << combinations << endl;
 
   return 0;
 }
+
+// int main() {
+//   vector<vector<int>> values = {
+//     {1, 2, 3},
+//     {4, 5},
+//     {6, 7, 8, 9},
+//     // {1, 2, 3, 4, 5, 6}
+//   };
+
+//   cout << "values:\n" << values << endl;
+//   auto start = std::chrono::high_resolution_clock::now();
+//   constexpr int kNumIterations = 1000;
+//   vector<vector<int>> combinations;
+//   double time = 0;
+//   {
+//     ScopedTimer timer(&time);
+//     for (int i = 0; i < kNumIterations; i++) {
+//       // combinations = getCombinationsByIndex(values);
+//       combinations = getCombinationsByRecursion(values);
+//     }
+//   }
+
+//   cout << "Combinations:\n" << combinations << endl;
+
+//   cout << "Calculated " << combinations.size() << " combinations in an average of "
+//        << static_cast<int>(time * 1e6 / kNumIterations) << " microseconds." << endl;
+
+//   return 0;
+// }

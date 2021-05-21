@@ -47,7 +47,7 @@ class Rectangle : public Shape {
   double height_;
 };
 
-std::ostream& operator<<(std::ostream& stream, Rectangle& r) {
+std::ostream& operator<<(std::ostream& stream, const Rectangle& r) {
   stream << "Rectangle: width = " << r.width() << ", height = " << r.height();
   return stream;
 }
@@ -62,13 +62,13 @@ int main() {
   rect2->setId("rect2");
   cout << *rect2 << endl;
   cout << "area = " << rect2->getArea() << endl;
-  cout << "rect2: " << rect2 << endl;
+  cout << "rect2: " << rect2.get() << endl;
 
   std::unique_ptr<Rectangle> rect3;
   rect3 = std::move(rect2);
 
-  cout << "rect2: " << rect2 << endl;
-  cout << "rect3: " << rect3 << endl;
+  cout << "rect2: " << rect2.get() << endl;
+  cout << "rect3: " << rect3.get() << endl;
 
   rect2.reset();
   rect3.reset();
