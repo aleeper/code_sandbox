@@ -1,8 +1,9 @@
 #include <algorithm>
 #include <iostream>
 #include <unordered_map>
-#include <vector>
 #include <iomanip>
+#include <sstream>
+#include <vector>
 
 using namespace std;
 
@@ -10,6 +11,18 @@ struct Vertex {
   float x;
   float y;
   float z;
+
+  bool operator==(const Vertex& rhs) const {
+    return x == rhs.x && y == rhs.y && z == rhs.z;
+  }
+};
+
+struct MyHash {
+  size_t operator ()(const Vertex& v) const {
+    std::stringstream ss;
+    ss << v.x << "," << v.y << "," << v.z;
+    return hash<string>{}(ss.str());
+  }
 };
 
 struct MyHash {
@@ -58,7 +71,6 @@ void deduplicateVertices(const std::vector<Vertex>& input,
 
   unordered_map<Vertex, int, MyHash> unique_vertices;
   for (const Vertex& v : input) {
-
     auto iter = unique_vertices.find(v);
     if (iter == unique_vertices.end()) { // doesn't exist
       unique_vertices.insert(std::make_pair(v, unique_vertices.size()));
@@ -81,7 +93,6 @@ int main() {
     Vertex{0, 1, 0},
     Vertex{0, 1, 1}
   };
-
   cout << "input: " << input_vertices << endl;
   vector<Vertex> vertices;
   vector<int> indices;
