@@ -10,7 +10,7 @@ using namespace std;
 
 void Read(int reader_id, queue<int>* q, std::mutex* mutex) {
     while (true) {
-        std::scoped_lock lock(*mutex);
+        //std::scoped_lock lock(*mutex);
         if (!q->empty()) {
             int value = q->front();
             cout << "Reading " << value << " from reader " << reader_id << endl;
@@ -26,7 +26,7 @@ void Write(queue<int>* q, std::mutex* mutex) {
         usleep(5e5);
         sequence++;
         cout << "Writing " << sequence << endl;
-        std::scoped_lock lock(*mutex);
+        //std::scoped_lock lock(*mutex);
         q->push(sequence);
     }
 }
@@ -35,6 +35,7 @@ int main(int argc, char** argv) {
     std::queue<int> q;
     std::mutex mutex;
 
+    cout << "Starting..." << endl;
     std::thread reader1(Read, 1, &q, &mutex);
     std::thread reader2(Read, 2, &q, &mutex);
     std::thread writer(Write, &q, &mutex);
@@ -42,4 +43,5 @@ int main(int argc, char** argv) {
     writer.join();
     reader1.join();
     reader2.join();
+    cout << "Done!" << endl;
 }
