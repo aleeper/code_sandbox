@@ -19,25 +19,12 @@ struct Vertex {
 
 struct MyHash {
   size_t operator ()(const Vertex& v) const {
-    std::stringstream ss;
-    ss << v.x << "," << v.y << "," << v.z;
-    return hash<string>{}(ss.str());
-  }
-};
-
-struct MyHash {
-  size_t operator ()(const Vertex& v) const {
     string s = std::to_string(v.x) + "," +  std::to_string(v.y) + "," + std::to_string(v.z);
     size_t vx = hash<string>{}(s);
     return vx;
   }
 
 };
-
-bool operator==(const Vertex& lhs, const Vertex& rhs) {
-  return lhs.x == rhs.x && lhs.y == rhs.y && lhs.z == rhs.z;
-}
-
 
 std::ostream& operator<<(std::ostream& stream, const Vertex& v) {
   stream << "[";
