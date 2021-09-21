@@ -1,8 +1,4 @@
-#include <algorithm>
 #include <iostream>
-#include <unordered_map>
-#include <iomanip>
-#include <sstream>
 #include <vector>
 #include <cmath>
 
@@ -33,6 +29,7 @@ Vec3 operator*(const double s, const Vec3& a) {
     return {s * a.x, s * a.y, s * a.z};
 }
 
+// Helper function -- completely optional.
 std::ostream& operator<<(std::ostream& stream, const Vec3& v) {
   stream << "[";
   stream << v.x << ", " << v.y << ", " << v.z;
@@ -40,6 +37,7 @@ std::ostream& operator<<(std::ostream& stream, const Vec3& v) {
   return stream;
 }
 
+// Helper function -- completely optional.
 template <class T>
 std::ostream& operator<<(std::ostream& stream, const std::vector<T>& vec) {
   stream << "[";
@@ -62,41 +60,31 @@ Vec3 interpolateTrajectory(const std::vector<Vec3>& points, double t) {
   for (size_t i = 0; i < points.size() - 1; ++i) {
     trajectory_length += (points[i+1] - points[i]).norm();
   }
-  cout << "trajectory_length: " << trajectory_length << endl;
-  double interpolated_length = t * trajectory_length;
-
+  double remaining_length = t * trajectory_length;
 
   for (size_t i = 0; i < points.size() - 1; ++i) {
-    double this_segment = (points[i+1] - points[i]).norm();
-    if (this_segment > interpolated_length) {
-      double new_t = interpolated_length / this_segment;
-      return (1-new_t) * points[i] + new_t * points[i+1];
+    double segment_length = (points[i+1] - points[i]).norm();
+    if (segment_length > remaining_length) {
+      double segment_t = remaining_length / segment_length;
+      return (1-segment_t) * points[i] + segment_t * points[i+1];
     } else {
-      interpolated_length -= this_segment;
+      remaining_length -= segment_length;
     }
   }
-  cout << "BADNESS!" << endl;
-
+  return points.back();
 }
 
-// To execute C++, please define "int main()"
 int main() {
-
   vector<Vec3> points = {
-    Vec3{0, 0, 0},
-    Vec3{1, 0, 0},
-    Vec3{1, 1, 0},
-    Vec3{3, 1, 0},
-  };
+      Vec3{0, 0, 0},Vec3{1, 0, 0},Vec3{1, 1, 0},Vec3{3, 1, 0}
+    };
   cout << "points: " << points << endl;
-  cout << "t = 0.00: " << interpolateTrajectory(points, 0.00) << endl;
-  cout << "t = 0.25: " << interpolateTrajectory(points, 0.25) << endl;
-  cout << "t = 0.33: " << interpolateTrajectory(points, 0.33) << endl;
-  cout << "t = 0.50: " << interpolateTrajectory(points, 0.50) << endl;
-  cout << "t = 0.66: " << interpolateTrajectory(points, 0.66) << endl;
-  cout << "t = 0.75: " << interpolateTrajectory(points, 0.75) << endl;
-  cout << "t = 1.00: " << interpolateTrajectory(points, 1.00) << endl;
-
+  cout << "t = 0.0: " << interpolateTrajectory(points, 0.0) << endl;
+  cout << "t = 0.2: " << interpolateTrajectory(points, 0.2) << endl;
+  cout << "t = 0.4: " << interpolateTrajectory(points, 0.4) << endl;
+  cout << "t = 0.6: " << interpolateTrajectory(points, 0.6) << endl;
+  cout << "t = 0.8: " << interpolateTrajectory(points, 0.8) << endl;
+  cout << "t = 1.0: " << interpolateTrajectory(points, 1.0) << endl;
 
   return 0;
 }
